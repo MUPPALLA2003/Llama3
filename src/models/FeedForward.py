@@ -9,16 +9,17 @@ class FeedForward(nn.Module):
         super().__init__()
 
         hidden_dim = self._compute_hidden_dim(d_model,multiple_of)
+        self.d_model = d_model
+        self.multiple_of = multiple_of
         self.gate_proj = nn.Linear(d_model,hidden_dim,bias=False)
         self.up_proj = nn.Linear(d_model,hidden_dim,bias=False)
         self.down_proj = nn.Linear(hidden_dim,d_model,bias=False)
 
-    @staticmethod
-    def _compute_hidden_dim(d_model:int,multiple_of:int) -> int:
+    def _compute_hidden_dim(self) -> int:
     
-        hidden_dim = 4 * d_model
+        hidden_dim = 4 * self.d_model
         hidden_dim = (2 * hidden_dim) // 3
-        hidden_dim = ((hidden_dim + multiple_of - 1)// multiple_of) * multiple_of
+        hidden_dim = ((hidden_dim + self.multiple_of - 1)// self.multiple_of) * self.multiple_of
 
         return hidden_dim
 
